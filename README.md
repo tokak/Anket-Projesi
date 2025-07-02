@@ -60,6 +60,7 @@ Aşağıdaki alanları kendi bilgilerinize göre doldurun:
 ![Adsız2](https://github.com/user-attachments/assets/0156ce44-3413-4042-9efa-137464e71962)
 **Yardımcı Videolar**
 https://www.youtube.com/watch?v=621WoYkkwQU  Mail iki adımlı doğrulama işlemleri 
+
 https://www.youtube.com/watch?v=D8DMj2lQMwo  Google ClientId, ClientSecret alma 
 
 
