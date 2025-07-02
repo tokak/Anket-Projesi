@@ -4,38 +4,38 @@
 
 ---
 
-## 🚀 Özellikler
+##  Özellikler
 
 ### 👤 Kullanıcı Kimlik Doğrulama & Yetkilendirme
-- ✅ Kullanıcı Kayıt (RegisterDto)
-- 🔐 Giriş Yapma (LoginDto)
-- 🔁 Şifremi Unuttum & Şifre Sıfırlama (ForgotPasswordDto, ResetPasswordDto)
-- 🔄 Şifre Değiştirme (ChangePasswordDto)
-- 📧 E-posta Onayı (AccountController)
-- 🛡️ Rol Bazlı Yetkilendirme (Admin rolü – `RoleConsts.Admin`)
+-  Kullanıcı Kayıt (RegisterDto)
+-  Giriş Yapma (LoginDto)
+-  Şifremi Unuttum & Şifre Sıfırlama (ForgotPasswordDto, ResetPasswordDto)
+-  Şifre Değiştirme (ChangePasswordDto)
+-  E-posta Onayı (AccountController)
+- 🛡 Rol Bazlı Yetkilendirme (Admin rolü – `RoleConsts.Admin`)
 
 ---
 
 ### 📊 Anket Yönetimi (Yönetici Paneli)
-- ➕ Anket Oluşturma (`CreateSurveyDto`)
-- 📋 Anket Listeleme (`ListSurveyDto`)
-- ✏️ Anket Güncelleme (`UpdateSurveyDto`)
-- ❓ Anket Soruları & Cevap Seçenekleri Yönetimi  
+-  Anket Oluşturma (`CreateSurveyDto`)
+-  Anket Listeleme (`ListSurveyDto`)
+- Anket Güncelleme (`UpdateSurveyDto`)
+- Anket Soruları & Cevap Seçenekleri Yönetimi  
   (`CreateSurveyQuestionDto`, `AnswerOptionInputDto`, `QuestionInputDto`, `ListSurveyQuestionsDto`)
 
 ---
 
 ### 📝 Anket Cevaplama (Üye Paneli)
-- 🟢 Aktif Anketleri Görüntüleme (`ListTakeSurveyDto`)
-- ✅ Anket Tamamlama (`SubmitAnswerRequestDto`)
-- 🙏 Teşekkür Sayfası (`ThankYouDto`)
+-  Aktif Anketleri Görüntüleme (`ListTakeSurveyDto`)
+-  Anket Tamamlama (`SubmitAnswerRequestDto`)
+-  Teşekkür Sayfası (`ThankYouDto`)
 
 ---
 
 ### 📈 Raporlama & Analiz
-- 📊 Genel Anket İstatistikleri (`DashboardSummaryDto`)
-- 📉 Anket Bazlı Grafikler (`SurveyStatisticsDto`)
-- 📑 Kullanıcı Cevaplarına Göre Detaylı Analiz
+-  Genel Anket İstatistikleri (`DashboardSummaryDto`)
+-  Anket Bazlı Grafikler (`SurveyStatisticsDto`)
+-  Kullanıcı Cevaplarına Göre Detaylı Analiz
 
 ---
 
