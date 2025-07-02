@@ -1,0 +1,158 @@
+﻿
+@{
+    Layout = null;
+    ViewData["Title"] = "Doğrulama E-postasını Yeniden Gönder";
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Anket Sistemi</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* Login sayfasından kopyalanan ve bu sayfaya uyarlanan stiller */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #6a11cb;
+            background: linear-gradient(to right, rgba(106, 17, 203, 0.9), rgba(37, 117, 252, 0.9));
+            padding: 20px;
+        }
+
+        .form-card {
+            max-width: 480px; /* İçerik biraz daha uzun olduğu için genişlik artırıldı */
+            width: 100%;
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+            background-color: #ffffff;
+            opacity: 0;
+            animation: fadeIn 0.8s forwards;
+        }
+
+        @@keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .form-card .card-body {
+            padding: 2.5rem;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+            .logo-container i {
+                font-size: 3rem;
+                color: #4a56e2;
+            }
+
+        .card-title {
+            font-weight: 700;
+            color: #333;
+        }
+
+        .form-floating .form-control {
+            border-radius: 0.5rem;
+            padding-left: 2.5rem;
+        }
+
+        .form-floating > label {
+            padding-left: 2.5rem;
+        }
+
+        .form-floating .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        .btn-primary {
+            font-weight: 600;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #4a56e2;
+            border-color: #4a56e2;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+            .btn-primary:hover {
+                background-color: #3b46c4;
+                border-color: #3b46c4;
+            }
+
+        .bottom-link a {
+            font-size: 0.9rem;
+            text-decoration: none;
+            color: #4a56e2;
+            font-weight: 500;
+        }
+
+            .bottom-link a:hover {
+                text-decoration: underline;
+            }
+
+        .text-danger {
+            font-size: 0.8rem;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="main-container">
+        <div class="form-card">
+            <div class="card-body">
+
+                <div class="logo-container">
+                    <i class="fa-solid fa-envelope-circle-check"></i>
+                </div>
+
+                <h3 class="card-title mb-2 text-center">@ViewData["Title"]</h3>
+                <p class="text-muted text-center mb-4">
+                    Kayıt olduğunuz e-posta adresini girerek yeni bir doğrulama linki alabilirsiniz.
+                </p>
+
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                    <div class="form-floating mb-4 position-relative">
+                        <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
+                        <input name="email" id="email" class="form-control" placeholder="E-posta adresiniz" required autofocus />
+                        <label for="email">E-posta Adresi</label>
+                        @* Eğer bir model kullanıyorsanız span validation ekleyebilirsiniz *@
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Yeniden Gönder</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4 bottom-link">
+                    <a asp-action="Login" asp-controller="Account">
+                        <i class="fa-solid fa-arrow-left me-1"></i> Giriş sayfasına dön
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

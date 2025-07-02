@@ -1,0 +1,138 @@
+﻿@model ThankYouDto
+@{
+    ViewData["Title"] = "Teşekkür Ederiz!";
+    Layout = null;
+}
+
+
+<style>
+    /* Daha önceki CSS stilleri aynı kalabilir */
+    .thank-you-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        text-align: center;
+        padding: 2rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 4rem auto;
+    }
+
+    .thank-you-icon {
+        font-size: 5rem;
+        color: #28a745;
+        margin-bottom: 1.5rem;
+    }
+
+    .thank-you-title {
+        font-size: 2.8rem;
+        color: #343a40;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    /* Yeni stil: Anket Başlığı */
+    .survey-title-display {
+        font-size: 1.6rem;
+        color: #007bff; /* Anket başlığını vurgulamak için farklı bir renk */
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .thank-you-message {
+        font-size: 1.3rem;
+        color: #6c757d;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        max-width: 600px;
+    }
+
+    .thank-you-buttons .btn {
+        margin: 0.5rem;
+        padding: 0.8rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .thank-you-buttons .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .thank-you-buttons .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+    .thank-you-buttons .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+
+        .thank-you-buttons .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    /* Duyarlı Tasarım İçin Ayarlamalar */
+    @@media (max-width: 768px) {
+        .thank-you-container {
+            padding: 1.5rem;
+            margin: 2rem auto;
+            min-height: 60vh;
+        }
+
+        .thank-you-icon {
+            font-size: 4rem;
+        }
+
+        .thank-you-title {
+            font-size: 2.2rem;
+        }
+
+        .survey-title-display { /* Duyarlı başlık boyutu */
+            font-size: 1.4rem;
+        }
+
+        .thank-you-message {
+            font-size: 1.1rem;
+        }
+
+        .thank-you-buttons .btn {
+            padding: 0.6rem 1.5rem;
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div class="thank-you-container">
+    <i class="fas fa-check-circle thank-you-icon"></i>
+    <h1 class="thank-you-title">Teşekkür Ederiz!</h1>
+
+    @if (!string.IsNullOrEmpty(Model.SurveyTitle))
+    {
+        <p class="survey-title-display">
+            <strong>"@Model.SurveyTitle"</strong> anketine katılımınız için
+        </p>
+    }
+
+    <p class="thank-you-message">
+        Değerli geri bildirimleriniz bizim için büyük önem taşımaktadır ve hizmetlerimizi geliştirmemize yardımcı olacaktır.
+        Cevaplarınız başarıyla kaydedilmiştir.
+    </p>
+  @*   <div class="thank-you-buttons">
+        <a href="@Url.Action("Login", "Account",new{area=""})" class="btn btn-outline-primary">Login Sayfaya Dön</a>
+
+    </div> *@
+</div>
+
+@section Scripts {
+    }
+

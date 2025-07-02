@@ -1,0 +1,434 @@
+﻿@model ListTakeSurveyDto
+
+@{
+    ViewData["Title"] = Model.SurveyTitle;
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Anket Sistemi</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .survey-container {
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px var(--shadow);
+            border: 1px solid #e9ecef;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .lead {
+            color: var(--secondary-color);
+            font-size: 1.15rem;
+            margin-bottom: 40px;
+        }
+
+        .alert-info {
+            background-color: #e0f2f7;
+            border-color: #b3e5fc;
+            color: #01579b;
+            border-radius: 8px;
+            padding: 25px;
+            font-size: 0.95rem;
+        }
+
+        .alert-heading {
+            color: #0288d1;
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            margin-bottom: 30px;
+        }
+
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #e9ecef;
+        }
+
+        .progress-bar {
+            background-color: var(--primary-color);
+            border-radius: 5px;
+        }
+
+        .question-block {
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            margin-bottom: 30px;
+        }
+
+            .question-block h5 {
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: #343a40;
+                margin-bottom: 25px;
+            }
+
+        .form-check {
+            margin-bottom: 15px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-check-input[type="radio"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-top: 0.25em;
+            border: 2px solid #ced4da;
+            transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+
+            .form-check-input[type="radio"]:checked {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+
+        .form-check-label {
+            font-size: 1.1rem;
+            color: #495057;
+            padding-left: 0.5rem;
+            cursor: pointer;
+        }
+
+        /* Hover efekti */
+        .form-check:hover {
+            background-color: #e9ecef;
+            border-radius: 5px;
+            padding: 5px;
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+
+        .question-navigation {
+            display: flex;
+            justify-content: space-between; /* Butonları iki yana yaslar */
+            margin-top: 30px;
+        }
+
+        .btn-lg {
+            padding: 12px 25px; /* Buton boyutunu ayarla */
+            font-size: 1.1rem;
+            border-radius: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transition: all 0.3s ease-in-out;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+                transform: translateY(-2px); /* Hafif yukarı kaydırma efekti */
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transition: all 0.3s ease-in-out;
+        }
+
+            .btn-secondary:hover {
+                background-color: #5a6268;
+                border-color: #5a6268;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .btn-secondary:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+
+        /* Küçük ekranlar için düzenlemeler */
+        @@media (max-width: 768px) {
+            .survey-container {
+                padding: 25px;
+                margin: 15px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .lead {
+                font-size: 1rem;
+            }
+
+            .question-block h5 {
+                font-size: 1.2rem;
+            }
+
+            .form-check-label {
+                font-size: 1rem;
+            }
+
+            .btn-lg {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container survey-container">
+        <h1 class="text-center mb-4">@Model.SurveyTitle</h1>
+        <p class="lead text-center mb-5">@Model.SurveyDescription</p>
+
+        @* Anket Bilgilendirme Mesajı *@
+        @if (Model.ShowWelcomeMessage)
+        {
+            <div class="alert alert-info text-center mb-4" role="alert">
+                <h5 class="alert-heading">Değerli Katılımcımız,</h5>
+                <p>Bu anket, değerli fikirlerinizi almak ve hizmetlerimizi/ürünlerimizi daha da iyileştirmek amacıyla hazırlanmıştır. Cevaplarınız tamamen gizli tutulacak ve yalnızca istatistiksel amaçlar için kullanılacaktır.</p>
+                <p>Toplam @Model.TotalQuestions sorudan oluşmaktadır. Her soruyu cevapladıktan sonra bir sonraki soruya geçebileceksiniz. Lütfen tüm soruları dikkatlice okuyunuz.</p>
+                <hr>
+                <p class="mb-0">Katılımınız için şimdiden teşekkür ederiz! Başlamak için lütfen ilk soruyu cevaplayın.</p>
+            </div>
+        }
+
+        @if (Model.CurrentQuestion != null)
+        {
+            <div class="progress-bar-container">
+                <p class="text-center mb-2 text-secondary">Soru @((Model.CurrentQuestionIndex + 1)) / @Model.TotalQuestions</p>
+                <div class="progress" role="progressbar" aria-label="Soru İlerlemesi" aria-valuenow="@(((Model.CurrentQuestionIndex + 1) * 100) / Model.TotalQuestions)" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: @(((Model.CurrentQuestionIndex + 1) * 100) / Model.TotalQuestions)%"></div>
+                </div>
+            </div>
+
+            <form id="questionForm" asp-controller="MemberSurvey" asp-action="SubmitAnswer" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="surveyId" value="@Model.SurveyId" />
+                <input type="hidden" name="questionId" value="@Model.CurrentQuestion.Id" />
+                <input type="hidden" name="currentQuestionIndex" value="@Model.CurrentQuestionIndex" />
+
+                <div class="question-block mb-4">
+                    <h5 class="mb-3">@(@Model.CurrentQuestion.Text)</h5>
+                    @if (Model.CurrentQuestion.AnswerOptions != null && Model.CurrentQuestion.AnswerOptions.Any())
+                    {
+                        @foreach (var option in Model.CurrentQuestion.AnswerOptions.OrderBy(o => o.Id))
+                        {
+                            var isChecked = Model.UserAnswers.ContainsKey(Model.CurrentQuestion.Id) && Model.UserAnswers[Model.CurrentQuestion.Id] == option.Id;
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                       name="selectedOptionId"
+                                       id="option_@option.Id"
+                                       value="@option.Id"
+                                @(isChecked ? "checked" : "")
+                                       required>
+                                <label class="form-check-label" for="option_@option.Id">
+                                    @option.Text
+                                </label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">Bu soru için cevap seçeneği bulunmamaktadır.</p>
+                    }
+                </div>
+
+                <div class="question-navigation d-flex justify-content-between">
+
+                    @if (Model.CurrentQuestionIndex > 0)
+                    {
+                        <button type="button"
+                                id="prevButton"
+                                class="btn btn-secondary btn-lg">
+                            <i class="bi bi-arrow-left-circle me-2"></i> Önceki Soru
+                        </button>
+                    }
+
+                    <button type="button" id="nextButton" class="btn btn-primary btn-lg">
+                        @if (Model.CurrentQuestionIndex < Model.TotalQuestions - 1)
+                        {
+                            <text><i class="bi bi-arrow-right-circle mr-2"></i> Sonraki Soru</text>
+                        }
+                        else
+                        {
+                            <text><i class="bi bi-check-circle-fill mr-2"></i> Anketi Bitir</text>
+                        }
+                    </button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-warning text-center" role="alert">
+                <p>Bu ankette henüz soru bulunmamaktadır.</p>
+                <a href="@Url.Action("Index", "Survey",new{area="Admin"})" class="btn btn-warning mt-3">Ana Sayfaya Dön</a>
+            </div>
+        }
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.getElementById('questionForm');
+            var nextButton = document.getElementById('nextButton');
+
+            var successMessage = '@TempData["SuccessMessage"]';
+            var errorMessage = '@TempData["ErrorMessage"]';
+
+            if (successMessage) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Başarılı!',
+                    text: successMessage,
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            }
+            if (errorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: errorMessage,
+                    showConfirmButton: true
+                });
+            }
+
+         var prevButton = document.getElementById('prevButton');
+        if (prevButton) {
+            prevButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                // Razor tarafında URL’yi hazır üretmek işimizi kolaylaştırır
+                window.location.href = '@Url.Action("TakeSurvey", new { id = Model.SurveyId, currentQuestionIndex = Model.CurrentQuestionIndex - 1 })';
+            });
+        }
+
+
+            // Event listener for the "Next" (or "Finish") button
+            if (nextButton) {
+                nextButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    submitForm('next');
+                });
+            }
+
+            function submitForm(actionType) {
+                var selectedOption = document.querySelector('input[name="selectedOptionId"]:checked');
+
+                // Güvenli boolean kontrolü
+                var hasAnswerOptions = @((Model.CurrentQuestion?.AnswerOptions?.Any() ?? false).ToString().ToLower());
+
+                if (actionType === 'next' && hasAnswerOptions && !selectedOption) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Uyarı!',
+                        text: 'Lütfen bir cevap seçin.',
+                        confirmButtonText: 'Tamam'
+                    });
+                    return;
+                }
+
+                var formData = new FormData(form);
+                var data = {
+                    surveyId: parseInt(formData.get('surveyId')),
+                    questionId: parseInt(formData.get('questionId')),
+                    selectedOptionId: selectedOption ? parseInt(selectedOption.value) : null,
+                    currentQuestionIndex: parseInt(formData.get('currentQuestionIndex')),
+                    navigationAction: actionType
+                };
+
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val(),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // Eğer sunucu bir hata kodu (4xx, 5xx) döndürürse
+                        return response.json().then(err => {
+                            throw new Error(err.message || 'Sunucu hatası');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.success) {
+                        if (result.redirectUrl) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Anket Tamamlandı!',
+                                text: 'Ankete katılımınız için teşekkür ederiz.',
+                                showConfirmButton: false,
+                                timer: 2000
+                            }).then(() => {
+                                window.location.href = result.redirectUrl;
+                            });
+                        } else if (result.nextQuestionUrl) {
+                            window.location.href = result.nextQuestionUrl;
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: result.message || 'Cevap gönderilirken bir hata oluştu.',
+                            confirmButtonText: 'Tamam'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Bir Hata Oluştu!',
+                        text: 'İşlem sırasında beklenmeyen bir hata meydana geldi: ' + error.message,
+                        confirmButtonText: 'Tamam'
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+﻿@model ListSurveyQuestionsDto
+
+@{
+    ViewData["Title"] = $"Anket Detayı: {Model.SurveyTitle}";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7f6;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .survey-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .survey-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 15px;
+    }
+
+        .survey-header h1 {
+            color: #007bff;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .survey-header p {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+    .question-section {
+        margin-bottom: 25px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 6px;
+        border: 1px solid #e0e0e0;
+    }
+
+        .question-section h3 {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 10px;
+        }
+
+    .answer-options {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .answer-options li {
+            background-color: #ffffff;
+            border: 1px solid #dcdcdc;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+        }
+
+            .answer-options li:hover {
+                background-color: #eaf6ff;
+                border-color: #aaccff;
+                transform: translateY(-2px);
+            }
+
+            .answer-options li i { 
+                margin-right: 10px;
+                color: #007bff;
+            }
+
+    .btn-back {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 10px 20px;
+        background-color: #6c757d;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+</style>
+
+<div class="survey-container">
+    <div class="survey-header">
+        <h1>@Model.SurveyTitle Anket Soruları</h1>
+        <p>Bu anketin sorularını ve cevap seçeneklerini inceleyebilirsiniz.</p>
+    </div>
+
+    @if (Model.Questions == null || !Model.Questions.Any())
+    {
+        <div class="alert alert-info" role="alert">
+            Bu ankete henüz soru eklenmemiştir.
+        </div>
+    }
+    else
+    {
+        @foreach (var question in Model.Questions)
+        {
+            <div class="question-section">
+                <h3>@question.Text</h3>
+                @if (question.AnswerOptions != null && question.AnswerOptions.Any())
+                {
+                    <ul class="answer-options">
+                        @foreach (var option in question.AnswerOptions)
+                        {
+                            <li>
+                                <i class="fas fa-dot-circle"></i> 
+                                @option.Text
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">Bu soruya henüz cevap seçeneği eklenmemiştir.</p>
+                }
+            </div>
+        }
+    }
+
+    <a asp-area="Admin" asp-controller="Survey" asp-action="Index" class="btn-back">Anket Listesine Geri Dön</a>
+</div>

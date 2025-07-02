@@ -1,0 +1,172 @@
+﻿@model RegisterDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hesap Oluştur</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --background-color: #f0f2f5;
+            --card-background: #ffffff;
+            --text-color: #495057;
+            --input-border: #ced4da;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        /* CSS sınıfları daha genel bir 'auth' temasına uygun hale getirildi */
+        .auth-container {
+            max-width: 850px;
+            width: 100%;
+        }
+
+        .auth-card {
+            background-color: var(--card-background);
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Görsel, anket ve veri analizi temasına uygun olarak değiştirildi */
+        .auth-card-image {
+            background: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop') center center/cover;
+            min-width: 350px;
+        }
+
+        .auth-card-form {
+            padding: 2.5rem;
+            width: 100%;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .divider-text {
+            position: relative;
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+            .divider-text span {
+                padding: 0 10px;
+                background-color: var(--card-background);
+                position: relative;
+                z-index: 2;
+            }
+
+            .divider-text:after {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 1px;
+                background-color: var(--input-border);
+                left: 0;
+                top: 50%;
+                z-index: 1;
+            }
+
+        /* Responsive tasarım */
+        @@media (max-width: 768px) {
+            .auth-card-image {
+                display: none;
+            }
+
+            .auth-card-form {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="card auth-card">
+
+            <div class="auth-card-image"></div>
+
+            <div class="auth-card-form">
+                <h3 class="card-title mb-2">Ankete Katılmak İçin Kayıt Olun</h3>
+                <p class="text-muted mb-4">Görüşlerinizi paylaşmak ve çeşitli konulardaki anketleri yanıtlamak için lütfen aşağıdaki bilgileri doldurun.</p>
+
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FirstName" class="form-label">Ad</label>
+                            <input asp-for="FirstName" class="form-control" placeholder="Örn: Ferhat" />
+                            <span asp-validation-for="FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="LastName" class="form-label">Soyad</label>
+                            <input asp-for="LastName" class="form-control" placeholder="Örn: Cengiz" />
+                            <span asp-validation-for="LastName" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">E-posta</label>
+                        <input asp-for="Email" class="form-control" placeholder="eposta@adresiniz.com" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Şifre</label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label">Şifre Tekrar</label>
+                        <input asp-for="ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                    </div>
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-user-plus me-2"></i>Hesabımı Oluştur
+                        </button>
+                    </div>
+
+                    <p class="divider-text mt-4"><span>veya</span></p>
+                    <div class="d-grid gap-2">
+                        <a href="/Account/GoogleLogin/" class="btn btn-outline-secondary"><i class="fab fa-google me-2"></i> Google ile Devam Et</a>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <p class="text-muted">Zaten bir hesabınız var mı? <a asp-action="Login" asp-controller="Account">Giriş Yapın</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+</body>
+</html>

@@ -1,0 +1,275 @@
+﻿@model LoginDto
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Anket Sistemi</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right, rgba(106, 17, 203, 0.9), rgba(37, 117, 252, 0.9));
+            padding: 20px;
+        }
+
+        .login-card {
+            max-width: 450px;
+            width: 100%;
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+            background-color: #ffffff;
+            opacity: 0;
+            animation: fadeIn 0.8s forwards;
+        }
+
+        @@keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .login-card .card-body {
+            padding: 2.5rem;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+            .logo-container i {
+                font-size: 3rem;
+                color: #4a56e2;
+            }
+
+        .card-title {
+            font-weight: 700;
+            color: #333;
+        }
+
+        .form-floating .form-control {
+            border-radius: 0.5rem;
+            padding-left: 2.5rem;
+        }
+
+        .form-floating > label {
+            padding-left: 2.5rem;
+        }
+
+        .form-floating .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        .password-toggle-icon {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .form-check-label {
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            font-weight: 600;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #4a56e2;
+            border-color: #4a56e2;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+            .btn-primary:hover {
+                background-color: #3b46c4;
+                border-color: #3b46c4;
+                box-shadow: 0 0.25rem 0.75rem rgba(74, 86, 226, 0.4);
+            }
+
+        .bottom-links a {
+            font-size: 0.9rem;
+            text-decoration: none;
+            color: #4a56e2;
+            font-weight: 500;
+        }
+
+            .bottom-links a:hover {
+                text-decoration: underline;
+            }
+
+        .text-danger {
+            font-size: 0.8rem;
+        }
+
+        /* Düzeltme ve Eklemeler için stiller */
+        .btn-google {
+            background-color: #ffffff;
+            color: #495057;
+            border: 1px solid #ced4da;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+
+            .btn-google:hover {
+                background-color: #f8f9fa;
+                border-color: #adb5bd;
+            }
+
+        .divider-text {
+            position: relative;
+            text-align: center;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #6c757d;
+        }
+
+            .divider-text span {
+                padding: 0 15px;
+                background-color: #ffffff;
+                position: relative;
+                z-index: 2;
+            }
+
+            .divider-text:after {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 1px;
+                background-color: #dee2e6;
+                left: 0;
+                top: 50%;
+                z-index: 1;
+            }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="login-card">
+            <div class="card-body">
+
+                <div class="logo-container">
+                    <i class="fa-solid fa-poll-h"></i>
+                </div>
+
+                <h3 class="card-title mb-4 text-center">Anket Sistemine Giriş</h3>
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success mb-3" role="alert">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger mb-3" role="alert">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+
+                @if (ViewBag.ShowResendLink == true)
+                {
+                    <div class="text-center mt-3">
+                        <a asp-action="ResendEmailConfirmation" asp-controller="Account">Doğrulama e-postasını yeniden gönder</a>
+                    </div>
+                }
+
+                @* 1. E-POSTA/ŞİFRE İLE GİRİŞ FORMU *@
+                <form method="post" asp-action="Login" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+                    <input type="hidden" class="form-control" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                    <div class="form-floating mb-3 position-relative">
+                        <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
+                        <input type="email" class="form-control" id="email" asp-for="Email" placeholder="E-posta adresiniz" required autofocus />
+                        <label for="email">E-posta Adresi</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3 position-relative">
+                        <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" asp-for="Password" placeholder="Şifreniz" required />
+                        <label for="password">Şifre</label>
+                        <span id="togglePassword" class="password-toggle-icon"><i class="fa-solid fa-eye"></i></span>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe" asp-for="RememberMe" />
+                            <label class="form-check-label" for="rememberMe">Beni Hatırla</label>
+                        </div>
+                        <div class="bottom-links">
+                            <a href="/Account/ForgotPassword">Şifremi Unuttum</a>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+                </form>
+
+                @* 2. BÖLÜCÜ (Divider) *@
+                <p class="divider-text"><span>veya</span></p>
+
+                @* 3. GOOGLE İLE GİRİŞ FORMU *@
+                <form asp-controller="Account" asp-action="GoogleLogin" method="post" class="d-grid">
+                    <button type="submit" class="btn btn-google w-100" name="provider" value="Google">
+                        <i class="fab fa-google me-2"></i> Google ile Giriş Yap
+                    </button>
+                </form>
+
+                @* 4. KAYIT OLMA LİNKİ (Doğru olan link) *@
+                <div class="text-center mt-4 bottom-links">
+                    <span>Hesabın yok mu? </span><a asp-action="Register" asp-controller="Account">Hemen Kayıt Ol</a>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#togglePassword').on('click', function () {
+                const passwordField = $('#password');
+                const passwordFieldType = passwordField.attr('type');
+                const icon = $(this).find('i');
+                if (passwordFieldType === 'password') {
+                    passwordField.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordField.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

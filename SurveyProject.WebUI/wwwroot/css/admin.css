@@ -1,0 +1,198 @@
+﻿/* Mazer Admin Template'den esinlenilmiştir. */
+body {
+    background-color: #f2f7ff;
+    font-family: 'Nunito', sans-serif;
+}
+
+#app {
+    display: flex;
+    position: relative;
+}
+
+#sidebar {
+    width: 300px;
+    background-color: #fff;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    transition: all .5s;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+    #sidebar.active {
+        left: 0;
+    }
+
+    #sidebar:not(.active) {
+        left: -300px;
+    }
+
+.sidebar-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 2rem;
+    border-bottom: 1px solid #eee;
+}
+
+    .sidebar-header .logo i {
+        font-size: 1.5rem;
+    }
+
+    .sidebar-header .logo span {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+.sidebar-menu {
+    padding: 1rem 0;
+    flex-grow: 1;
+}
+
+    .sidebar-menu .menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+.sidebar-title {
+    padding: 0 1.5rem;
+    margin: 1.5rem 0 1rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #aeb1b5;
+}
+
+.sidebar-item a {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    color: #25396f;
+    font-weight: 500;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+}
+
+    .sidebar-item a i {
+        margin-right: 15px;
+        font-size: 1.2rem;
+    }
+
+    
+
+#main {
+    flex-grow: 1;
+    padding-left: 300px;
+    transition: all .5s;
+}
+
+    #main.layout-navbar {
+        padding-top: 5rem;
+    }
+
+header {
+    position: fixed;
+    top: 0;
+    width: calc(100% - 300px);
+    background: #fff;
+    padding: 1rem 2rem;
+    z-index: 99;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all .5s;
+}
+
+#sidebar:not(.active) + #main header {
+    width: 100%;
+}
+
+.burger-btn {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #25396f;
+}
+
+.user-menu .user-name h6 {
+    font-weight: 600;
+}
+
+.user-menu .user-img .avatar img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+#main-content {
+    padding: 0 2rem;
+}
+
+footer {
+    padding: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.avatar-initials {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #0d6efd; /* Varsayılan renk, dinamik olarak değişecek */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+}
+
+
+.sidebar-item.has-sub .submenu {
+    list-style: none;
+    padding: 0 0 0 3.8rem; /* Sol girinti (ana ikondan hizalı) */
+    max-height: 0; /* Başlangıçta kapalı */
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+/* Aktif (açık) alt menü stili */
+.sidebar-item.has-sub.active > .submenu {
+    max-height: 500px; /* Açıldığında alabileceği maksimum yükseklik */
+    transition: max-height 0.5s ease-in;
+}
+
+.submenu-item a {
+    font-size: 0.95rem;
+    padding: 0.6rem 0;
+    
+    /* Alt menü linklerinin dikey hizalamasını düzeltir */
+    display: block !important;
+    border-left: none !important;
+}
+
+.submenu-item.active > a {
+   
+    font-weight: 700;
+}
+
+
+/* Responsive */
+@media (max-width: 1199.98px) {
+    #sidebar {
+        left: -300px;
+    }
+
+        #sidebar.active {
+            left: 0;
+        }
+
+    #main, header {
+        width: 100%;
+        padding-left: 0;
+    }
+}

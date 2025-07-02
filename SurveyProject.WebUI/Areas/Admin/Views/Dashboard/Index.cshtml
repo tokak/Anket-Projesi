@@ -1,0 +1,235 @@
+﻿@model DashboardSummaryDto
+@{
+    ViewData["Title"] = "Yönetici Paneli";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+  
+
+    h1 {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 2.5rem;
+        text-align: center;
+    }
+
+    .dashboard-section-title {
+        font-size: 1.8rem;
+        color: #34495e;
+        margin-top: 3rem;
+        margin-bottom: 1.8rem;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .dashboard-section-title i {
+            font-size: 1.5rem;
+        }
+
+    .dashboard-card {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        transition: all 0.3s ease-in-out;
+        min-height: 180px;
+        max-height: 180px;
+        justify-content: space-between;
+        overflow: hidden;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .dashboard-card .icon-wrapper {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .icon-wrapper.bg-success {
+        background: linear-gradient(45deg, #28a745, #218838);
+    }
+
+    .icon-wrapper.bg-warning {
+        background: linear-gradient(45deg, #ffc107, #e0a800);
+    }
+
+    .dashboard-card .card-content {
+        flex-grow: 1;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+
+    .dashboard-card .card-label {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        margin-bottom: 0.2rem;
+        font-weight: 500;
+        line-height: 1.2;
+    }
+
+    .dashboard-card .card-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #34495e;
+        line-height: 1.1;
+    }
+
+    @@media (max-width: 767.98px) {
+        .dashboard-card {
+            min-height: 150px;
+            max-height: 150px;
+            padding: 1rem;
+        }
+
+            .dashboard-card .icon-wrapper {
+                font-size: 2rem;
+                width: 55px;
+                height: 55px;
+            }
+
+            .dashboard-card .card-value {
+                font-size: 1.8rem;
+            }
+
+            .dashboard-card .card-label {
+                font-size: 0.85rem;
+            }
+
+        .dashboard-section-title {
+            font-size: 1.4rem;
+        }
+    }
+</style>
+
+<div class="container-fluid ">
+    <h1 >Yönetici Paneli</h1>
+
+    <h2 class="dashboard-section-title">
+        Tamamlanan Anket İstatistikleri <i class="bi bi-check-circle-fill text-success"></i>
+    </h2>
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="dashboard-card">
+                <div class="icon-wrapper bg-success">
+                    <i class="bi bi-clipboard2-check"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-label">Toplam Tamamlanma Kaydı</div>
+                    <div class="card-value">@Model.TotalCompletedSurveys</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="dashboard-card">
+                <div class="icon-wrapper bg-success">
+                    <i class="bi bi-bar-chart-line-fill"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-label">Tamamlanan Farklı Anket Sayısı</div>
+                    <div class="card-value">@Model.TotalUniqueCompletedSurveys</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="dashboard-card">
+                <div class="icon-wrapper bg-success">
+                    <i class="bi bi-question-circle"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-label">Tamamlanan Anketlerdeki Toplam Soru Sayısı</div>
+                    <div class="card-value">@Model.TotalQuestionsInCompletedSurveys</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="dashboard-card">
+                <div class="icon-wrapper bg-success">
+                    <i class="bi bi-check2-all"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-label">Tamamlanan Anketlerdeki Toplam Cevap Sayısı</div>
+                    <div class="card-value">@Model.TotalAnswersInCompletedSurveys</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="dashboard-section-title">
+        Devam Eden (Tamamlanmayan) Anket İstatistikleri <i class="bi bi-arrow-repeat text-warning"></i>
+    </h2>
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="dashboard-card">
+                <div class="icon-wrapper bg-warning">
+                    <i class="bi bi-activity"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-label">Toplam Devam Eden Kayıt</div>
+                    <div class="card-value">@Model.TotalInProgressSurveys</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="dashboard-card">
+                <div class="icon-wrapper bg-warning">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-label">Devam Eden Farklı Anket Sayısı</div>
+                    <div class="card-value">@Model.TotalUniqueInProgressSurveys</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="dashboard-card">
+                <div class="icon-wrapper bg-warning">
+                    <i class="bi bi-patch-exclamation"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-label">Devam Eden Anketlerdeki Toplam Soru Sayısı</div>
+                    <div class="card-value">@Model.TotalQuestionsInInProgressSurveys</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="dashboard-card">
+                <div class="icon-wrapper bg-warning">
+                    <i class="bi bi-pencil-fill"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-label">Devam Eden Anketlerdeki Toplam Cevap Sayısı</div>
+                    <div class="card-value">@Model.TotalAnswersInInProgressSurveys</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+}

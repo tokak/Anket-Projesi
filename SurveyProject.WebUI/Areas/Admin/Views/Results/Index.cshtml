@@ -1,0 +1,143 @@
+﻿@using Survey.DTOs.SurveyIstatistikDto
+@using System.Text.Json
+@model SurveyStatisticsDto
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var serializedCompletionRates = JsonSerializer.Serialize(Model.SurveyCompletionRates ?? new List<SurveyCompletionRateDto>());
+    var serializedAnswerCounts = JsonSerializer.Serialize(Model.SurveyAnswerCounts ?? new List<SurveyAnswerCountDto>());
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css">
+    <style>
+        .metric-box {
+            border-radius: 12px;
+            padding: 1.5rem;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+            .metric-box i {
+                font-size: 2rem;
+                color: #777;
+            }
+
+            .metric-box .value {
+                font-size: 2.5rem;
+                font-weight: bold;
+                margin-top: 0.5rem;
+            }
+
+            .metric-box .label {
+                font-size: 1rem;
+                color: #555;
+            }
+    </style>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        const surveyCompletionRates = @Html.Raw(@serializedCompletionRates);
+        const surveyAnswerCounts = @Html.Raw(@serializedAnswerCounts);
+
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(drawCharts);
+
+        function drawCharts() {
+            drawCompletionRateChart();
+            drawTotalAnswersPieChart();
+        }
+
+        function drawCompletionRateChart() {
+            const data = new google.visualization.DataTable();
+            data.addColumn('string', 'Anket');
+            data.addColumn('number', 'Tamamlanma Oranı');
+
+            surveyCompletionRates.forEach(item => {
+                data.addRow([item.SurveyTitle, item.CompletionRate]);
+            });
+
+            const chart = new google.visualization.ColumnChart(document.getElementById('completionRateChart'));
+            chart.draw(data, { height: 300, title: 'Tamamlanma Oranları', vAxis: { format: '#%' } });
+        }
+
+        function drawTotalAnswersPieChart() {
+            const data = new google.visualization.DataTable();
+            data.addColumn('string', 'Anket');
+            data.addColumn('number', 'Cevap Sayısı');
+
+            surveyAnswerCounts.forEach(item => {
+                data.addRow([item.SurveyTitle, item.AnswerCount]);
+            });
+
+            const chart = new google.visualization.PieChart(document.getElementById('totalAnswersPieChart'));
+            chart.draw(data, { height: 300, title: 'Cevap Sayısı' });
+        }
+    </script>
+}
+
+<div class="container py-4">
+    <h1 class="mb-4"><i class="bi bi-speedometer2"></i> İstatistik</h1>
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="metric-box">
+                <i class="bi bi-list-check"></i>
+                <div class="value">@Model.TotalSurveys</div>
+                <div class="label">Toplam Anket</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-box">
+                <i class="bi bi-chat-left-text"></i>
+                <div class="value">@Model.TotalAnswers</div>
+                <div class="label">Toplam Cevap</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-box">
+                <i class="bi bi-percent"></i>
+                <div class="value">
+                    @if (Model.Questions != null && Model.Questions.Any())
+                    {
+                        @(((double)Model.TotalAnswers / (Model.TotalSurveys * Model.Questions.Count()) * 100).ToString("F2"))
+                    }
+                    else
+                    {
+                        @("0")
+                    }
+                </div>
+                <div class="label">Ortalama Tamamlanma</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-box">
+                <i class="bi bi-people"></i>
+                <div class="value">@Model.TotalRegisteredUsers</div>
+                <div class="label">Kayıtlı Kullanıcı</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tamamlanma Oranları</h5>
+                    <div id="completionRateChart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Toplam Cevaplar</h5>
+                    <div id="totalAnswersPieChart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

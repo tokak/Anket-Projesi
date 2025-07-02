@@ -1,0 +1,55 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Erişim Engellendi</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            padding-top: 60px;
+        }
+
+        .access-denied-card {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 48px;
+            color: #dc3545; /* Bootstrap red color */
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="access-denied-card">
+            <i class="error-icon">&#128078;</i> <h2>Erişim Engellendi</h2>
+            <p class="lead">Üzgünüz, bu sayfayı görüntüleme yetkiniz bulunmamaktadır.</p>
+            <hr class="my-4">
+            <p>Lütfen yetkili bir kullanıcı olduğunuzdan emin olun veya sistem yöneticinize başvurun.</p>
+            <a class="btn btn-secondary btn-sm" href="/Account/Login/">Login Sayfasına Dön</a>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

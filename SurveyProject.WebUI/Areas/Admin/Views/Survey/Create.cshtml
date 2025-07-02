@@ -1,0 +1,127 @@
+﻿@model CreateSurveyDto
+@{
+    ViewData["Title"] = "Yeni Anket Oluştur";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-gradient-primary text-white text-center py-4">
+                    <h2 class="mb-0 fw-bold">Yeni Anket Oluştur</h2>
+                    <p class="mb-0 opacity-75">Anket bilgilerinizi girerek yeni bir anket oluşturun.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        @* Güvenlik için AntiForgeryToken *@
+                        @Html.AntiForgeryToken()
+
+                        @* Formdaki genel hataları göstermek için *@
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Title" class="form-label fw-semibold text-muted">Anket Başlığı</label>
+                            <input asp-for="Title" class="form-control form-control-lg" placeholder="Örn: Müşteri Memnuniyet Anketi 2025" aria-describedby="titleHelp" />
+                            <div id="titleHelp" class="form-text text-muted">Anketinizin ana başlığı, kullanıcıların ilk göreceği kısım.</div>
+                            <span asp-validation-for="Title" class="text-danger mt-1 d-block"></span>
+                        </div>
+
+                      @*   <div class="mb-4">
+                            <label asp-for="Url" class="form-label fw-semibold text-muted">Anket URL'si (Benzersiz Bağlantı)</label>
+                            <input asp-for="Url" class="form-control form-control-lg" placeholder="orn: musteri-memnuniyet-anketi-2025" aria-describedby="urlHelp" />
+                            <div id="urlHelp" class="form-text text-muted">Bu link tarayıcı adres çubuğunda görünecektir. Boşluksuz ve Türkçe karakter olmadan yazılması önerilir.</div>
+                            <span asp-validation-for="Url" class="text-danger mt-1 d-block"></span>
+                        </div> *@
+
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label fw-semibold text-muted">Anket Açıklaması</label>
+                            <textarea asp-for="Description" class="form-control" rows="5" placeholder="Anketin amacı, içeriği ve ne hakkında olduğu hakkında detaylı bir açıklama..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger mt-1 d-block"></span>
+                        </div>
+
+                        <div class="mb-4 form-check">
+                            <input class="form-check-input" type="checkbox" asp-for="IsActive" id="isActiveCheck" checked>
+                            <label class="form-check-label fw-semibold text-muted" for="isActiveCheck">
+                                Aktif mi?
+                            </label>
+                         
+                        </div>
+
+                        <hr class="my-5">
+
+                        <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+                            <a href="/Admin/Dashboard" class="btn btn-outline-secondary btn-lg px-4">
+                                <i class="bi bi-x-circle me-2"></i>Vazgeç
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <i class="bi bi-plus-circle me-2"></i>Anket Oluştur
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    /* Gradient Arka Plan */
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #007bff, #6610f2); /* Bootstrap primary ve mor tonları */
+    }
+
+    /* Kart Gölgesi ve Kenarlık İyileştirmesi */
+    .card.shadow-lg {
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+    }
+
+    .card.rounded-lg {
+        border-radius: 1rem !important; /* Daha yuvarlak köşeler */
+    }
+
+    /* Başlık ve Açıklama Stil Ayarlamaları */
+    .card-header h2 {
+        font-size: 2.25rem;
+        letter-spacing: -0.05rem;
+    }
+
+    .card-header p {
+        font-size: 1.1rem;
+    }
+
+    /* Form Kontrolleri Odak Rengi */
+    .form-control:focus {
+        border-color: #6610f2; /* Mor tonlarında odak rengi */
+        box-shadow: 0 0 0 0.25rem rgba(102, 16, 242, 0.25);
+    }
+
+    /* Buton İkonları ve Hover Efektleri */
+    .btn i {
+        vertical-align: middle;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 123, 255, 0.2);
+    }
+
+    .btn-outline-secondary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 0.5rem 1rem rgba(108, 117, 125, 0.1);
+    }
+
+    /* Checkbox için özel stil (isteğe bağlı) */
+    .form-check-input:checked {
+        background-color: #007bff; /* Mavi onay kutusu */
+        border-color: #007bff;
+    }
+</style>

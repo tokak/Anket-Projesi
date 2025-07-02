@@ -1,0 +1,414 @@
+﻿@model CreateSurveyQuestionDto
+
+@{
+    ViewData["Title"] = "Anket Soruları Oluşturma";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .question-card {
+        animation: fadeIn 0.5s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        transition: transform 0.2s;
+    }
+
+        .question-card:hover {
+            transform: scale(1.01);
+        }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+
+    .answer-row input {
+        border-radius: 6px !important;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    body {
+        background-color: #f9fafc;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <h2 class="text-center mb-4 text-secondary">@Model.SurveyTitle Anketine Ait Sorular</h2>
+
+            @* Sayfa yüklenirken oluşan hataları göstermek için *@
+            @if (ViewData["LoadErrorMessage"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @ViewData["LoadErrorMessage"]
+                </div>
+            }
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-info text-dark p-2 rounded-pill shadow-sm">Toplam Soru: <span id="question-count">@Model.Questions.Count</span></span>
+                <button type="button" class="btn btn-outline-success shadow-sm" id="add-question-btn" title="Yeni soru ekle" data-bs-toggle="tooltip">
+                    <i class="bi bi-plus-circle"></i> Yeni Soru Ekle
+                </button>
+            </div>
+
+            <form method="post" asp-action="SaveSurveyQuestions" asp-controller="Survey" asp-area="Admin" id="surveyForm">
+                <input type="hidden" name="SurveyId" value="@Model.SurveyId" />
+                <input type="hidden" name="SurveyTitle" value="@Model.SurveyTitle" />
+
+                <div id="questions-container">
+                    @for (int i = 0; i < Model.Questions.Count; i++)
+                    {
+                        var q = Model.Questions[i];
+                        <div class="card mb-3 question-card p-3" data-question-index="@i" data-question-id="@q.Id">
+                            <div class="card-header bg-light d-flex justify-content-between align-items-center rounded">
+                                <strong>Soru @(i + 1):</strong>
+                                <button type="button" class="btn btn-outline-danger btn-sm remove-question-btn" title="Bu soruyu sil">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <input type="hidden" name="Questions[@i].Id" value="@q.Id" />
+
+                                <div class="form-group mb-3">
+                                    <label>Soru Metni</label>
+                                    <input type="text" class="form-control" name="Questions[@i].QuestionText" value="@q.QuestionText" required />
+                                </div>
+
+                                <div class="answer-options" data-answer-index="@q.AnswerOptions.Count">
+                                    <label class="mt-2">Cevap Seçenekleri</label>
+                                    @for (int j = 0; j < q.AnswerOptions.Count; j++)
+                                    {
+                                        var ao = q.AnswerOptions[j];
+                                        <div class="input-group mb-2 answer-row">
+                                            <input type="hidden" name="Questions[@i].AnswerOptions[@j].Id" value="@ao.Id" />
+                                            <input type="text" class="form-control" name="Questions[@i].AnswerOptions[@j].OptionText" value="@ao.OptionText" @(j < 2 ? "required" : "") />
+                                            <button type="button" class="btn btn-outline-danger remove-answer-btn">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+
+                                <button type="button" class="btn btn-outline-primary btn-sm mt-2 add-answer-btn" title="Yeni cevap ekle">
+                                    <i class="bi bi-plus-circle"></i> Yeni Cevap Ekle
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="text-center mt-4" id="save-questions-button-container" style="@(Model.Questions.Count == 0 ? "display: none;" : "")">
+                    <button type="submit" class="btn btn-primary btn-lg shadow">
+                        <i class="bi bi-check-circle"></i> Soruları Kaydet
+                    </button>
+                </div>
+            </form>
+
+            <div class="text-center mt-3">
+                <a href="/Admin/Survey/Index" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-arrow-left-circle"></i> Anket Listesine Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let questionIndex = @Model.Questions.Count;
+        const saveButtonContainer = document.getElementById("save-questions-button-container");
+        const questionCountSpan = document.getElementById("question-count");
+
+        // Kaydetme butonunun görünürlüğünü ve toplam soru sayısını günceller.
+        // Ayrıca ekleme/silme sonrası soru numaralarını yeniden düzenler.
+        function updateSaveButtonVisibility() {
+            const currentQuestionCount = document.querySelectorAll(".question-card").length;
+            if (currentQuestionCount > 0) {
+                saveButtonContainer.style.display = "block";
+            } else {
+                saveButtonContainer.style.display = "none";
+            }
+            questionCountSpan.innerText = currentQuestionCount;
+            updateQuestionNumbers();
+        }
+
+        // Soru numaralarını ve input alanlarının isimlerini doğru model bağlama için günceller.
+        function updateQuestionNumbers() {
+            document.querySelectorAll(".question-card").forEach((card, q_idx) => {
+                const header = card.querySelector(".card-header strong");
+                if (header) {
+                    header.innerText = `Soru ${q_idx + 1}:`;
+                }
+                card.setAttribute("data-question-index", q_idx);
+
+                const questionTextInput = card.querySelector("input[name^='Questions['][name$='.QuestionText']");
+                if (questionTextInput) {
+                    questionTextInput.name = `Questions[${q_idx}].QuestionText`;
+                }
+                const questionIdInput = card.querySelector("input[name^='Questions['][name$='.Id']");
+                if (questionIdInput) {
+                    questionIdInput.name = `Questions[${q_idx}].Id`;
+                }
+
+                card.querySelectorAll(".answer-row").forEach((answerRow, a_idx) => {
+                    const optionTextInput = answerRow.querySelector("input[name$='.OptionText']");
+                    const optionIdInput = answerRow.querySelector("input[name$='.Id']");
+
+                    if (optionTextInput) {
+                        optionTextInput.name = `Questions[${q_idx}].AnswerOptions[${a_idx}].OptionText`;
+                    }
+                    if (optionIdInput) {
+                        optionIdInput.name = `Questions[${q_idx}].AnswerOptions[${a_idx}].Id`;
+                    }
+                });
+            });
+        }
+
+        // Anket formuna yeni bir soru kartı eklemeyi yönetir.
+        document.getElementById("add-question-btn").addEventListener("click", function () {
+            const container = document.getElementById("questions-container");
+            const card = document.createElement("div");
+            card.className = "card mb-3 question-card p-3";
+            card.setAttribute("data-question-index", questionIndex);
+
+            const answerInputs = [];
+            for (let i = 0; i < 4; i++) { // Yeni sorular için başlangıçta 4 cevap seçeneği ekle
+                const required = i < 2 ? 'required' : '';
+                answerInputs.push(`
+                    <div class="input-group mb-2 answer-row">
+                        <input type="hidden" name="Questions[${questionIndex}].AnswerOptions[${i}].Id" value="0" />
+                        <input type="text" class="form-control" name="Questions[${questionIndex}].AnswerOptions[${i}].OptionText" ${required} />
+                        <button type="button" class="btn btn-outline-danger remove-answer-btn">
+                            <i class="bi bi-x"></i>
+                        </button>
+                    </div>
+                `);
+            }
+
+            card.innerHTML = `
+                <div class="card-header bg-light d-flex justify-content-between align-items-center rounded">
+                    <strong>Soru ${questionIndex + 1}:</strong>
+                    <button type="button" class="btn btn-outline-danger btn-sm remove-question-btn" title="Bu soruyu sil">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" name="Questions[${questionIndex}].Id" value="0" />
+                    <div class="form-group mb-3">
+                        <label>Soru Metni</label>
+                        <input type="text" class="form-control" name="Questions[${questionIndex}].QuestionText" required />
+                    </div>
+                    <div class="answer-options" data-answer-index="4">
+                        <label>Cevap Seçenekleri</label>
+                        ${answerInputs.join("")}
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm mt-2 add-answer-btn">
+                        <i class="bi bi-plus-circle"></i> Yeni Cevap Ekle
+                    </button>
+                </div>
+            `;
+
+            container.appendChild(card);
+            card.scrollIntoView({ behavior: "smooth", block: "start" });
+
+            questionIndex++;
+            updateSaveButtonVisibility();
+        });
+
+        // Dinamik olarak eklenen butonlar için olay yetkilendirmesi (soru silme, cevap ekleme, cevap silme)
+        document.addEventListener("click", function (e) {
+            // Soru silme mantığı
+            if (e.target.closest(".remove-question-btn")) {
+                const card = e.target.closest(".question-card");
+                const questionTextElement = card.querySelector("input[name$='.QuestionText']");
+                const questionText = questionTextElement ? questionTextElement.value : "Bu soruyu";
+                const questionId = card.querySelector("input[name$='.Id']")?.value;
+
+                Swal.fire({
+                    title: 'Emin misiniz?',
+                    text: `"${questionText}" sorusu silinecektir. Bu işlem geri alınamaz!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Evet, sil!',
+                    cancelButtonText: 'İptal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (questionId && questionId !== "0") {
+                            deleteQuestionFromBackend(questionId, card);
+                        } else {
+                            card.remove();
+                            updateSaveButtonVisibility();
+                            Swal.fire(
+                                'Silindi!',
+                                'Soru başarıyla silindi.',
+                                'success'
+                            );
+                        }
+                    }
+                });
+            }
+
+            // Bir soruya yeni cevap seçeneği ekleme mantığı
+            if (e.target.closest(".add-answer-btn")) {
+                const cardBody = e.target.closest(".card-body");
+                const questionCard = e.target.closest(".question-card");
+                const qIndex = questionCard.getAttribute("data-question-index");
+                const answerContainer = cardBody.querySelector(".answer-options");
+                let answerIndex = parseInt(answerContainer.getAttribute("data-answer-index"));
+
+                const answerRow = document.createElement("div");
+                answerRow.className = "input-group mb-2 answer-row";
+                answerRow.innerHTML = `
+                    <input type="hidden" name="Questions[${qIndex}].AnswerOptions[${answerIndex}].Id" value="0" />
+                    <input type="text" class="form-control" name="Questions[${qIndex}].AnswerOptions[${answerIndex}].OptionText" />
+                    <button type="button" class="btn btn-outline-danger remove-answer-btn">
+                        <i class="bi bi-x"></i>
+                    </button>
+                `;
+
+                answerContainer.appendChild(answerRow);
+                answerContainer.setAttribute("data-answer-index", answerIndex + 1);
+            }
+
+            // Cevap seçeneği silme mantığı
+            if (e.target.closest(".remove-answer-btn")) {
+                const answerRow = e.target.closest(".answer-row");
+                const answerContainer = answerRow.closest(".answer-options");
+                const allAnswers = answerContainer.querySelectorAll(".answer-row");
+                const answerTextElement = answerRow.querySelector("input[name$='.OptionText']");
+                const answerText = answerTextElement ? answerTextElement.value : "Bu cevabı";
+                const answerId = answerRow.querySelector("input[name$='.Id']")?.value;
+
+                if (allAnswers.length <= 2) {
+                    Swal.fire({ // Bu uyarı için de SweetAlert kullan, tutarlı bir kullanıcı deneyimi için
+                        title: 'Uyarı!',
+                        text: "Her soruda en az 2 cevap olmalıdır.",
+                        icon: 'warning',
+                        confirmButtonText: 'Tamam'
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Emin misiniz?',
+                    text: `"${answerText}" cevabı silinecektir. Bu işlem geri alınamaz!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Evet, sil!',
+                    cancelButtonText: 'İptal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (answerId && answerId !== "0") {
+                            deleteAnswerFromBackend(answerId, answerRow);
+                        } else {
+                            answerRow.remove();
+                            updateQuestionNumbers();
+                            Swal.fire(
+                                'Silindi!',
+                                'Cevap seçeneği başarıyla silindi.',
+                                'success'
+                            );
+                        }
+                    }
+                });
+            }
+        });
+
+        // AJAX aracılığıyla backend'den bir soruyu silmek için fonksiyon.
+        async function deleteQuestionFromBackend(questionId, cardElement) {
+            try {
+                const response = fetch(`/Admin/Survey/DeleteQuestion/${questionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (response.ok) {
+                    cardElement.remove();
+                    updateSaveButtonVisibility();
+                    Swal.fire(
+                        'Silindi!',
+                        'Soru başarıyla veritabanından silindi.',
+                        'success'
+                    );
+                } else {
+                    const errorText = response.text();
+                    Swal.fire(
+                        'Hata!',
+                        `Soru silinirken bir hata oluştu: ${response.statusText} - ${errorText}`,
+                        'error'
+                    );
+                }
+            } catch (error) {
+                Swal.fire(
+                    'Hata!',
+                    `Soru silinirken bir ağ hatası oluştu: ${error.message}`,
+                    'error'
+                );
+            }
+        }
+
+        //  backend'den bir cevap seçeneğini silmek için fonksiyon.
+            async function deleteAnswerFromBackend(answerId, answerRowElement) {
+            try {
+                const response = await fetch(`/Admin/Survey/DeleteAnswerOption/${answerId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                // Şimdi 'response' gerçekten sunucudan gelen HTTP Response nesnesi
+                if (response.ok) { 
+                    answerRowElement.remove(); // DOM'dan kaldır
+                    updateQuestionNumbers(); // İndeksleri güncelle
+                    Swal.fire(
+                        'Silindi!',
+                        'Cevap seçeneği başarıyla veritabanından silindi.',
+                        'success'
+                    );
+                } else {
+                    // Hata durumunda response.text() çağrısını da 'await' ile yapmalısınız.
+                    const errorText = await response.text();
+                    Swal.fire(
+                        'Hata!',
+                        `Cevap seçeneği silinirken bir hata oluştu: ${response.statusText} - ${errorText}`,
+                        'error'
+                    );
+                }
+            } catch (error) {
+                Swal.fire(
+                    'Hata!',
+                    'Cevap seçeneği silinirken bir ağ hatası oluştu: ' + error.message,
+                    'error'
+                );
+            }
+        }
+
+        // Bootstrap tooltiplerini sayfa yüklendiğinde etkinleştir.
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltipTriggerList.forEach(tooltipTriggerEl => {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Sayfa yüklendiğinde kaydetme butonu görünürlüğünü başlangıçta kontrol et.
+        updateSaveButtonVisibility();
+    </script>
+}
