@@ -121,6 +121,9 @@ Kullanıcının verdiği cevaplar, yönetici (Admin) panelinde listelenir ve ana
 ![28](https://github.com/user-attachments/assets/088bef8a-a4a5-4671-86ea-4cc15d91bcfd)
 ![29](https://github.com/user-attachments/assets/274123ea-b990-48e3-af15-566aded182af)
 ![30](https://github.com/user-attachments/assets/0ba49ae0-91cf-4b38-9746-6bf17150c521)
+![31](https://github.com/user-attachments/assets/521f9967-a801-4606-9434-0fc6f5ac6690)
+![32](https://github.com/user-attachments/assets/70bbfb81-b110-42bd-a62c-308d5a91e744)
+
 
 
 
